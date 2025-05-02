@@ -6,9 +6,9 @@ const {
   deleteMovie,
   addMovie,
 } = require("../controllers/movies.controller");
+const authMiddleware = require("../middlewares/auth.middleware");
 
-
-router.get("/", getMovies);
+router.get("/", authMiddleware, getMovies);
 router.post(
   "/",
   upload.fields([
@@ -17,6 +17,6 @@ router.post(
   ]),
   addMovie
 );
-router.delete("/:id", deleteMovie);
+router.delete("/:id",  deleteMovie);
 
 module.exports = router;

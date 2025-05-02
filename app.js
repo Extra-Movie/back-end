@@ -32,6 +32,7 @@ app.get("/", (req, res, next) => {
 });
 
 //#region endpoints
+app.use("/api/auth", require("./src/routes/auth.router"));
 app.use("/api/movies", require("./src/routes/movies.router"));
 app.use("/api/tvshows", require("./src/routes/tv.router"));
 app.use("/api/genres", require("./src/routes/genres.router"));
