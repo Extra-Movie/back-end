@@ -40,6 +40,16 @@ const getTvShows = async (req, res) => {
   });
 };
 
+const getTvShowById = async (req, res) => {
+  const { id } = req.params;
+  const tvShow = await Tv.findById(id);
+  if (!tvShow) {
+    return res.status(404).json({ message: "Tv show not found" });
+  }
+  return res.status(200).json({ tvShow });
+};
+
+
 const addTvShow = async (req, res) => {
   if (!req.files || !req.files.poster_path || !req.files.backdrop_path) {
     return res.status(400).json({ message: "Please upload all files" });
@@ -73,4 +83,5 @@ module.exports = {
   getTvShows,
   addTvShow,
   deleteTvShow,
+  getTvShowById,
 };
