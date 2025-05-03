@@ -29,12 +29,7 @@ const UserSchema = new mongoose.Schema(
       ref: "movies",
       default: [],
     },
-    paidMovies: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "movies",
-      default: [],
-    },
-    paidMovies: {
+    ownedMovies: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "movies",
       default: [],
