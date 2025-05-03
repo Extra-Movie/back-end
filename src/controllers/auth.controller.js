@@ -7,13 +7,14 @@ const registerNewUser = async (req, res) => {
   let { name, email, password } = req.body;
   let userFound = await User.findOne({ email: email.toLowerCase() });
   if (userFound) {
-    return res.status(400).json({ message: "User already exists" }); 
+    return res.status(400).json({ message: "User already exists" });
   }
   const newUser = new User({
     name,
     email: email.toLowerCase(),
     password,
   });
+  console.log(newUser);
   try {
     await newUser.save();
     res
