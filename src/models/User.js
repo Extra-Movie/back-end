@@ -34,7 +34,12 @@ const UserSchema = new mongoose.Schema(
       ref: "movies",
       default: [],
     },
-    watchList: {
+    paidMovies: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "movies",
+      default: [],
+    },
+    cartMovies: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "movies",
       default: [],
@@ -63,7 +68,7 @@ UserSchema.methods.generateAuthToken = function () {
   }
   console.log(this);
   const token = jwt.sign(
-    { id: this._id, name: this.name, email: this.email },
+    { id: this._id, name: this.name, email: this.email, isAdmin: this.isAdmin },
     process.env.JWT_SECRET,
     { expiresIn: "3d" }
   );

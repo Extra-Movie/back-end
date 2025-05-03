@@ -4,10 +4,24 @@ const path = require("path");
 const swaggerDefinition = {
   openapi: "3.0.0",
   info: {
-    title: "My API",
+    title: "API BlockBuster",
     version: "1.0.0",
-    description: "My API Description",
+    description: "Our BlockBuster API ",
   },
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
+  },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
 };
 
 const options = {

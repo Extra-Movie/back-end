@@ -2,6 +2,7 @@ const Movie = require("../models/Movie");
 require("dotenv").config({ path: "../../.env" });
 
 const getMovies = async (req, res) => {
+  console.log(req.isAdmin);
   const page = req.query.page || 1;
   const limit = 20;
   const skip = (page - 1) * limit;
@@ -47,6 +48,15 @@ const getMovies = async (req, res) => {
   }
 };
 
+const getMovieById = async (req, res) => {
+  const { id } = req.params;
+  const movie = await Movie.findById(id);
+  if (!movie) {
+    return res.status(404).json({ message: "Movie not found" });
+  }
+  return res.status(200).json({ movie });
+};
+
 const addMovie = async (req, res) => {
   if (!req.files || !req.files.poster_path || !req.files.backdrop_path) {
     return res.status(400).json({ message: "Please upload all files" });
@@ -81,4 +91,5 @@ module.exports = {
   getMovies,
   deleteMovie,
   addMovie,
+  getMovieById,
 };

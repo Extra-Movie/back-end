@@ -47,6 +47,14 @@ const tvSchema = new mongoose.Schema(
     vote_count: {
       type: Number,
     },
+    price: {
+      type: Number,
+      default: 40,
+    },
+    number_of_purchases: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     strict: "throw",

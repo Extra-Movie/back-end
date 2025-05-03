@@ -1,8 +1,72 @@
+// --- auth.router.js ---
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: User already exists
+ *       500:
+ *         description: Error registering user
+ */
+
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login a user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "user@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "password123"
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Invalid email or password
+ */
+
 // --- genres.router.js ---
 /**
  * @swagger
  * /api/genres/movie:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Get all movie genres
  *     tags: [Genres]
  *     responses:
@@ -22,6 +86,8 @@
  * @swagger
  * /api/genres/tv:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Get all TV genres
  *     tags: [Genres]
  *     responses:
@@ -43,6 +109,8 @@
  * /api/movies:
  *   get:
  *     summary: Get movies with optional filters
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Movies]
  *     parameters:
  *       - in: query
@@ -82,6 +150,8 @@
  *
  *   post:
  *     summary: Add a new movie
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Movies]
  *     requestBody:
  *       content:
@@ -100,8 +170,12 @@
  *     responses:
  *       201:
  *         description: Movie added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Movie'
  *       400:
- *         description: Missing files
+ *         description: Bad request – Missing required fields or files
  */
 
 /**
@@ -109,6 +183,8 @@
  * /api/movies/{id}:
  *   delete:
  *     summary: Delete a movie by ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Movies]
  *     parameters:
  *       - in: path
@@ -130,23 +206,35 @@
  * /api/tvshows:
  *   get:
  *     summary: Get TV shows with optional filters
+ *     security:
+ *       - bearerAuth: []
  *     tags: [TV Shows]
  *     parameters:
  *       - in: query
  *         name: search
  *         schema:
  *           type: string
- *         description: Search keyword for TV show name
+ *         description: Search keyword for movie title
  *       - in: query
  *         name: year
  *         schema:
  *           type: string
- *         description: Filter by first air year
+ *         description: Filter by release year
  *       - in: query
  *         name: genre
  *         schema:
  *           type: integer
  *         description: Genre ID
+ *       - in: query
+ *         name: vote_average
+ *         schema:
+ *           type: number
+ *         description: Filter by vote average
+ *       - in: query
+ *         name: popularity
+ *         schema:
+ *           type: number
+ *         description: Filter by popularity
  *     responses:
  *       200:
  *         description: TV show list retrieved
@@ -159,6 +247,8 @@
  *
  *   post:
  *     summary: Add a new TV show
+ *     security:
+ *       - bearerAuth: []
  *     tags: [TV Shows]
  *     requestBody:
  *       content:
@@ -177,8 +267,12 @@
  *     responses:
  *       201:
  *         description: TV show added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TVShow'
  *       400:
- *         description: Missing files
+ *         description: Bad request – Missing required fields or files
  */
 
 /**
@@ -186,6 +280,8 @@
  * /api/tvshows/{id}:
  *   delete:
  *     summary: Delete a TV show by ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [TV Shows]
  *     parameters:
  *       - in: path
@@ -201,78 +297,183 @@
  *         description: TV show not found
  */
 
+// --- user.router.js ---
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users (admin only)
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: List of users
+ *       403:
+ *         description: Forbidden
+ */
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ *     summary: Get a user by ID
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User data
+ *       404:
+ *         description: User not found
+ *
+ *   put:
+ *     summary: Update user profile (self only)
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: User updated
+ *       403:
+ *         description: Forbidden
+ *
+ *   delete:
+ *     summary: Delete user (self or admin)
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted
+ *       403:
+ *         description: Forbidden
+ *
+ *   patch:
+ *     summary: Make user an admin (admin only)
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User promoted to admin
+ *       403:
+ *         description: Forbidden
+ */
+
+
+// (all routes from previous content preserved — omitted here for brevity)
+
 /**
  * @swagger
  * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *
  *   schemas:
  *     Movie:
  *       type: object
  *       properties:
- *         adult:
- *           type: boolean
+ *         title:
+ *           type: string
+ *         original_title:
+ *           type: string
  *         backdrop_path:
+ *           type: string
+ *         poster_path:
  *           type: string
  *         genre_ids:
  *           type: array
  *           items:
  *             type: integer
- *         id:
- *           type: integer
- *         original_language:
- *           type: string
- *         original_title:
- *           type: string
- *         overview:
+ *         release_date:
  *           type: string
  *         popularity:
  *           type: number
- *         poster_path:
- *           type: string
- *         release_date:
- *           type: string
- *         title:
- *           type: string
- *         video:
- *           type: boolean
  *         vote_average:
  *           type: number
  *         vote_count:
+ *           type: number
+ *         adult:
+ *           type: boolean
+ *         video:
+ *           type: boolean
+ *         overview:
+ *           type: string
+ *         price:
+ *           type: number
+ *         number_of_purchases:
  *           type: number
  *
  *     TVShow:
  *       type: object
  *       properties:
- *         adult:
- *           type: boolean
+ *         name:
+ *           type: string
+ *         original_name:
+ *           type: string
  *         backdrop_path:
+ *           type: string
+ *         poster_path:
  *           type: string
  *         genre_ids:
  *           type: array
  *           items:
  *             type: integer
- *         id:
- *           type: integer
+ *         first_air_date:
+ *           type: string
+ *         popularity:
+ *           type: number
+ *         vote_average:
+ *           type: number
+ *         vote_count:
+ *           type: number
  *         origin_country:
  *           type: array
  *           items:
  *             type: string
  *         original_language:
  *           type: string
- *         original_name:
- *           type: string
+ *         adult:
+ *           type: boolean
  *         overview:
  *           type: string
- *         popularity:
+ *         price:
  *           type: number
- *         poster_path:
- *           type: string
- *         first_air_date:
- *           type: string
- *         name:
- *           type: string
- *         vote_average:
- *           type: number
- *         vote_count:
+ *         number_of_purchases:
  *           type: number
  *
  *     Genre:
@@ -282,4 +483,32 @@
  *           type: integer
  *         name:
  *           type: string
+ *
+ *     User:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *       properties:
+ *         name:
+ *           type: string
+ *         email:
+ *           type: string
+ *         password:
+ *           type: string
+ *         isAdmin:
+ *           type: boolean
+ *         favoriteMovies:
+ *           type: array
+ *           items:
+ *             type: string
+ *         paidMovies:
+ *           type: array
+ *           items:
+ *             type: string
+ *         cartMovies:
+ *           type: array
+ *           items:
+ *             type: string
  */
