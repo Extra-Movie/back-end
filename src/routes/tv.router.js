@@ -10,8 +10,8 @@ const {
 const authMiddleware = require("../middlewares/auth.middleware");
 const adminMiddleware = require("../middlewares/admin.middleware");
 
-router.get("/", authMiddleware, getTvShows);
-router.get("/:id", authMiddleware, getTvShowById);
+router.get("/", getTvShows);
+router.get("/:id", getTvShowById);
 router.post(
   "/",
   authMiddleware,

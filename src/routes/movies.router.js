@@ -10,8 +10,8 @@ const {
 const authMiddleware = require("../middlewares/auth.middleware");
 const adminMiddleware = require("../middlewares/admin.middleware");
 
-router.get("/", authMiddleware, getMovies);
-router.get("/:id", authMiddleware, getMovieById);
+router.get("/", getMovies);
+router.get("/:id", getMovieById);
 router.post(
   "/",
   authMiddleware,
