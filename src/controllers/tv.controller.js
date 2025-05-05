@@ -15,10 +15,13 @@ const getTvShows = async (req, res) => {
     filter.genre_ids = { $in: [parseInt(req.query.genre)] };
   }
   if (req.query.vote_average) {
-    filter.vote_average = { $equal: parseFloat(req.query.vote_average) };
+    const vote = parseFloat(req.query.vote_average);
+    filter.vote_average = { $gte: vote - 0.5, $lte: vote + 0.5 };
   }
+
   if (req.query.popularity) {
-    filter.popularity = { $equal: parseFloat(req.query.popularity) };
+    const pop = parseFloat(req.query.popularity);
+    filter.popularity = { $gte: pop - 0.5, $lte: pop + 0.5 };
   }
 
   const totalMovies = await Tv.countDocuments({ ...filter });
@@ -40,6 +43,19 @@ const getTvShows = async (req, res) => {
   });
 };
 
+const getTopTvShows = async (req, res) => {
+  const topNum = parseInt(req.query.topNum) || 10;
+  try {
+    const tvs = await Tv.find({}).sort({ vote_average: -1 }).limit(topNum);
+    if (!tvs) {
+      return res.status(404).json({ message: "No movies found" });
+    }
+    return res.status(200).json({ tvs });
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching movies", error });
+  }
+};
+
 const getTvShowById = async (req, res) => {
   const { id } = req.params;
   const tvShow = await Tv.findById(id);
@@ -48,7 +64,6 @@ const getTvShowById = async (req, res) => {
   }
   return res.status(200).json({ tvShow });
 };
-
 
 const addTvShow = async (req, res) => {
   if (!req.files || !req.files.poster_path || !req.files.backdrop_path) {
@@ -84,4 +99,5 @@ module.exports = {
   addTvShow,
   deleteTvShow,
   getTvShowById,
+  getTopTvShows,
 };

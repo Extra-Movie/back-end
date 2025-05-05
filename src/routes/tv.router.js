@@ -6,11 +6,13 @@ const {
   addTvShow,
   deleteTvShow,
   getTvShowById,
+  getTopTvShows,
 } = require("../controllers/tv.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 const adminMiddleware = require("../middlewares/admin.middleware");
 
 router.get("/", getTvShows);
+router.get("/top", getTopTvShows);
 router.get("/:id", getTvShowById);
 router.post(
   "/",
