@@ -13,7 +13,7 @@ const adminMiddleware = require("../middlewares/admin.middleware");
 
 router.get("/", getMovies);
 router.get("/:id", getMovieById);
-router.get("/top/:topNum", getTopMovies);
+router.get("/top", getTopMovies);
 router.post(
   "/",
   authMiddleware,

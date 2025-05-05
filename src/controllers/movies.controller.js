@@ -52,7 +52,7 @@ const getMovies = async (req, res) => {
 };
 
 const getTopMovies = async (req, res) => {
-  const { topNum } = req.params || 10;
+  const { topNum } = req.query.top || 10;
   try {
     const movies = await Movie.find({})
       .sort({ vote_average: -1 })
