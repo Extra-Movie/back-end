@@ -12,8 +12,8 @@ const authMiddleware = require("../middlewares/auth.middleware");
 const adminMiddleware = require("../middlewares/admin.middleware");
 
 router.get("/", getMovies);
-router.get("/:id", getMovieById);
 router.get("/top", getTopMovies);
+router.get("/:id", getMovieById);
 router.post(
   "/",
   authMiddleware,
