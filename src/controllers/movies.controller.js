@@ -18,10 +18,13 @@ const getMovies = async (req, res) => {
     filter.genre_ids = { $in: [parseInt(req.query.genre)] };
   }
   if (req.query.vote_average) {
-  filter.vote_average = parseFloat(req.query.vote_average);
+    const vote = parseFloat(req.query.vote_average);
+    filter.vote_average = { $gte: vote - 0.5, $lte: vote + 0.5 };
   }
+
   if (req.query.popularity) {
-  filter.popularity = parseFloat(req.query.popularity);
+    const pop = parseFloat(req.query.popularity);
+    filter.popularity = { $gte: pop - 0.5, $lte: pop + 0.5 };
   }
 
   try {
