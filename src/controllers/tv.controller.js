@@ -16,11 +16,11 @@ const getTvShows = async (req, res) => {
   }
   if (req.query.vote_average) {
     const vote = parseInt(req.query.vote_average);
-    filter.vote_average = { $gte: vote, $lte: vote + 1 };
+    filter.vote_average = { $gte: vote, $lt: vote + 1 };
   }
   if (req.query.popularity) {
     const pop = parseInt(req.query.popularity);
-    filter.popularity = { $gte: vote, $lte: vote + 1 };
+    filter.popularity = { $gte: vote, $lt: vote + 1 };
   }
 
   const totalMovies = await Tv.countDocuments({ ...filter });
