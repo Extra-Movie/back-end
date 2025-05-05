@@ -15,13 +15,12 @@ const getTvShows = async (req, res) => {
     filter.genre_ids = { $in: [parseInt(req.query.genre)] };
   }
   if (req.query.vote_average) {
-    const vote = parseFloat(req.query.vote_average);
-    filter.vote_average = { $gte: vote - 0.5, $lte: vote + 0.5 };
+    const vote = parseInt(req.query.vote_average);
+    filter.vote_average = { $gte: vote, $lte: vote + 1 };
   }
-
   if (req.query.popularity) {
-    const pop = parseFloat(req.query.popularity);
-    filter.popularity = { $gte: pop - 0.5, $lte: pop + 0.5 };
+    const pop = parseInt(req.query.popularity);
+    filter.popularity = { $gte: vote, $lte: vote + 1 };
   }
 
   const totalMovies = await Tv.countDocuments({ ...filter });
