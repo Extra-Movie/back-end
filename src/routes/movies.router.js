@@ -6,12 +6,14 @@ const {
   deleteMovie,
   addMovie,
   getMovieById,
+  getTopMovies,
 } = require("../controllers/movies.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 const adminMiddleware = require("../middlewares/admin.middleware");
 
 router.get("/", getMovies);
 router.get("/:id", getMovieById);
+router.get("/top/:topNum", getTopMovies);
 router.post(
   "/",
   authMiddleware,

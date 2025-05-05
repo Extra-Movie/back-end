@@ -51,6 +51,21 @@ const getMovies = async (req, res) => {
   }
 };
 
+const getTopMovies = async (req, res) => {
+  const { topNum } = req.params || 10;
+  try {
+    const movies = await Movie.find({})
+      .sort({ vote_average: -1 })
+      .limit(topNum);
+    if (!movies) {
+      return res.status(404).json({ message: "No movies found" });
+    }
+    return res.status(200).json({ movies });
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching movies", error });
+  }
+};
+
 const getMovieById = async (req, res) => {
   const { id } = req.params;
   const movie = await Movie.findById(id);
@@ -95,4 +110,5 @@ module.exports = {
   deleteMovie,
   addMovie,
   getMovieById,
+  getTopMovies,
 };
