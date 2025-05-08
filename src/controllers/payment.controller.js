@@ -1,5 +1,7 @@
 const Transactions = require("../models/Transactions");
 const User = require("../models/User");
+const Movie = require("../models/Movie");
+const TVShow = require("../models/TVShow");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const createPaymentIntent = async (req, res) => {
@@ -86,6 +88,15 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
     // update the purchased movies in the user model
     // ! Needed to be changed after changing the schema of user model for the owned and cart
     user.ownedMovies.push(...user.cartMovies); // Assuming you have an ownedMovies field in the User model
+
+    await Movie.updateMany(
+      { _id: { $in: user.cartMovies } },
+      { $inc: { number_of_purchases: 1 } }
+    );
+    await TVShow.updateMany(
+      { _id: { $in: user.cartMovies } },
+      { $inc: { number_of_purchases: 1 } }
+    );
 
     Transactions.create({
       userId: user._id,
