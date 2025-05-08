@@ -1,7 +1,7 @@
 const Transactions = require("../models/Transactions");
 const User = require("../models/User");
 const Movie = require("../models/Movie");
-const TVShow = require("../models/TVShow");
+const TVShow = require("../models/Tv");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const createPaymentIntent = async (req, res) => {
