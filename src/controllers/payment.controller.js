@@ -25,6 +25,10 @@ const createPaymentIntent = async (req, res) => {
       amount: cart.reduce((acc, movie) => acc + movie.price * 100, 0), // Convert to cents
       currency: "egp",
       automatic_payment_methods: { enabled: true },
+      metadata: {
+        userId: req.userId,
+        cartMovies: JSON.stringify(cart.map((movie) => movie._id)),
+      },
     });
     res.status(200).json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
