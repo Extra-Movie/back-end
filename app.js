@@ -8,6 +8,8 @@ const swaggerUI = require("swagger-ui-express");
 const app = express();
 
 app.use(morgan("dev"));
+// adding webhook for stripe here to prevent body parsing using express.json()
+app.use("/webhook/payment", require("./src/webhooks/payment.webhook"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cros({ origin: "*" }));
