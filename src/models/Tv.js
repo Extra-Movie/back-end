@@ -69,4 +69,6 @@ tvSchema.index({ vote_average: 1 });
 tvSchema.index({ vote_count: 1 });
 tvSchema.index({ popularity: 1 });
 
-module.exports = mongoose.model("tvshows", tvSchema);
+// module.exports = mongoose.model("tvshows", tvSchema);
+
+module.exports = mongoose.model("tvShows", tvSchema);
