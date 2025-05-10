@@ -11,7 +11,9 @@ const {
   getCardsItems,
   addToCart,
   getOwned,
-  addToOwned
+  addToOwned,
+  removeFromCart,
+  removeFromWatchlist
 } = require("../controllers/user.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 const adminMiddleware = require("../middlewares/admin.middleware");
@@ -23,11 +25,13 @@ router.get("/getOwned", authMiddleware, getOwned);
 
 router.get("/getCart", authMiddleware, getCardsItems);
 router.post("/addToCart", authMiddleware, addToCart);
+router.delete("/deleteFromCart", authMiddleware, removeFromCart);
 
 
 
 router.post("/watchlist", authMiddleware, addToWatchlist);
 router.get("/getWatchlist", authMiddleware, getWatchlist);
+router.delete("/deleteFromWatchlist", authMiddleware, removeFromWatchlist);
 
 router.get("/", authMiddleware, adminMiddleware, getAllUsersData);
 router.get("/:id", authMiddleware, getUserDataById);
