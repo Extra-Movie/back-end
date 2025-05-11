@@ -40,6 +40,7 @@ app.use("/api/movies", require("./src/routes/movies.router"));
 app.use("/api/tvshows", require("./src/routes/tv.router"));
 app.use("/api/genres", require("./src/routes/genres.router"));
 app.use("/api/payment", require("./src/routes/payment.router"));
+app.use("/api/dashboard", require("./src/routes/dashboard.router"));
 //#endregion endpoints
 
 // not found middleware
