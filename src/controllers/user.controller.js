@@ -87,6 +87,201 @@ const makeAdmin = async (req, res) => {
     return res.status(500).json({ message: "Error updating user" });
   }
 };
+const addToWatchlist = async (req, res) => {
+  const userId = req.userId;
+  const { itemId, kind } = req.body; // item -->kind (tvshows,movies)
+
+  if (!["movies", "tvShows"].includes(kind)) {
+    return res.status(400).json({ message: "Invalid kind try enter tvShows or movies" });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    const existsInWatchList = user.watchlist.some(
+      (data) => data.item.toString() === itemId && data.kind === kind);
+
+    if (existsInWatchList) {
+      return res.status(400).json({ message: "It's in watchlist" });
+    }
+
+    // user.watchlist.push({ item: itemId, kind });
+    user.watchlist.push({
+      item: req.body.item,
+      kind: req.body.kind,
+    });
+    await user.save();
+
+    res.status(200).json({ message: "Added to watchlist", watchlist: user.watchlist });
+  } catch (error) {
+    res.status(500).json({ message: "server error", error });
+  }
+};
+
+const getWatchlist = async (req, res) => {
+  const userId = req.userId;
+  console.log("id of user ",req.userId);
+  try {
+    const user = await User.findById(userId).populate('watchlist.item');
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+
+    res.status(200).json({ watchlist: user.watchlist });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+const removeFromWatchlist = async (req, res) => {
+  const userId = req.userId;
+  const { itemId, kind } = req.body; 
+
+  if (!["movies", "tvShows"].includes(kind)) {
+    return res.status(400).json({ message: "Invalid kind try enter tvShows or movies" });
+  }
+  try {
+    console.log("userId", itemId);
+    const user = await User.findById(userId);
+    const existsInWatchList = user.watchlist.some(
+      (data) => (data.item.toString() === itemId || data._id === itemId) && data.kind === kind);
+
+    if (!existsInWatchList) {
+      return res.status(400).json({ message: "It's not in watchlist" });
+    }
+
+    user.watchlist = user.watchlist.filter(
+      (data) => !(data.item.toString() === itemId && data.kind === kind)
+    );
+
+    await user.save();
+
+    res.status(200).json({ message: "Removed from watchlist", watchlist: user.watchlist });
+  } catch (error) {
+    res.status(500).json({ message: "server error", error });
+  }
+}
+
+
+const getCardsItems = async (req, res) => {
+  const userId = req.userId;
+  try {
+    const user = await User.findById(userId).populate('cart.item');
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+
+    res.status(200).json({ cart: user.cart });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+const addToCart = async (req, res) => {
+  const userId = req.userId;
+  const { itemId, kind } = req.body; // item -->kind (tvShows,movies)
+
+  if (!["movies", "tvShows"].includes(kind)) {
+    return res.status(400).json({ message: "Invalid kind try enter tvShows or movies" });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    const existsInCart = user.cart.some(
+      (data) => data.item.toString() === itemId && data.kind === kind);
+
+    if (existsInCart) {
+      return res.status(400).json({ message: "It's in Cart" });
+    }
+
+    // user.cart.push({ item: itemId, kind });
+    user.cart.push({
+      item: req.body.item,
+      kind: req.body.kind,
+    });
+    await user.save();
+
+    res.status(200).json({ message: "Added to Cart", cart: user.cart });
+  } catch (error) {
+    res.status(500).json({ message: "server error", error });
+  }
+};
+
+removeFromCart = async (req, res) => {
+  const userId = req.userId;
+  const { item, kind } = req.body; 
+
+  if (!["movies", "tvShows"].includes(kind)) {
+    return res.status(400).json({ message: "Invalid kind try enter tvShows or movies" });
+  }
+  try {
+    console.log("userId", item);
+    const user = await User.findById(userId);
+    const existsInCart = user.cart.some(
+      (data) => (data.item.toString() === item || data._id === item) && data.kind === kind);
+
+    if (!existsInCart) {
+      return res.status(400).json({ message: "It's not in Cart" });
+    }
+
+    user.cart = user.cart.filter(
+      (data) => !(data.item.toString() === item && data.kind === kind)
+    );
+
+    await user.save();
+
+    res.status(200).json({ message: "Removed from Cart", cart: user.cart });
+  } catch (error) {
+    res.status(500).json({ message: "server error", error });
+  }
+  
+}
+
+const getOwned = async (req, res) => {
+  const userId = req.userId;
+  try {
+    const user = await User.findById(userId).populate('owned.item');
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+
+    res.status(200).json({ owned: user.owned });
+  } catch (error) {
+    console.error("Error in getOwned:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+const addToOwned = async (req, res) => {
+  const userId = req.userId;
+  const { itemId, kind } = req.body; // item -->kind (tvShows,movies)
+
+  if (!["movies", "tvShows"].includes(kind)) {
+    return res.status(400).json({ message: "Invalid kind try enter tvShows or movies" });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    const existsInOwned = user.owned.some(
+      (data) => data.item.toString() === itemId && data.kind === kind);
+
+    if (existsInOwned) {
+      return res.status(400).json({ message: "It's in Owned" });
+    }
+
+    // user.owned.push({ item: itemId,kind: kind });
+    user.owned.push({
+      item: req.body.item,
+      kind: req.body.kind,
+    });
+    console.log("Adding owned item:", req.body);
+    console.log("Owned array after push:", user.owned);
+    await user.save();
+
+    res.status(200).json({ message: "Added to Owned", owned: user.owned });
+  } catch (error) {
+    res.status(500).json({ message: "server error", error });
+  }
+};
 
 module.exports = {
   getAllUsersData,
@@ -94,4 +289,12 @@ module.exports = {
   updateProfile,
   deleteUser,
   makeAdmin,
+  addToWatchlist,
+  getWatchlist,
+  getCardsItems,
+  addToCart,
+  removeFromCart,
+  removeFromWatchlist,
+  getOwned,
+  addToOwned
 };

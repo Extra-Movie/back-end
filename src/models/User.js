@@ -29,16 +29,37 @@ const UserSchema = new mongoose.Schema(
       ref: "movies",
       default: [],
     },
-    ownedMovies: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "movies",
-      default: [],
-    },
-    cartMovies: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "movies",
-      default: [],
-    },
+    owned: [
+      {
+        item: { type: mongoose.Schema.Types.ObjectId, refPath: 'owned.kind' },
+        kind: { type: String, enum: ['movies', 'tvShows'], required: true },
+      }
+    ],
+
+    watchlist:[{
+       item:{
+        type: mongoose.Schema.Types.ObjectId,
+        required:true,
+        refPath:"watchlist.kind"
+        },
+      kind:{
+        type:String,
+        required:true,
+        enum:["movies","tvShows"]
+      }
+  }],
+  cart:[{
+    item:{
+     type: mongoose.Schema.Types.ObjectId,
+     required:true,
+     refPath:"cart.kind"
+     },
+   kind:{
+     type:String,
+     required:true,
+     enum:["movies","tvShows"]
+   }
+}],
   },
   {
     timestamps: true,
