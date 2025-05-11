@@ -208,23 +208,23 @@ const addToCart = async (req, res) => {
 
 removeFromCart = async (req, res) => {
   const userId = req.userId;
-  const { itemId, kind } = req.body; 
+  const { item, kind } = req.body; 
 
   if (!["movies", "tvShows"].includes(kind)) {
     return res.status(400).json({ message: "Invalid kind try enter tvShows or movies" });
   }
   try {
-    console.log("userId", itemId);
+    console.log("userId", item);
     const user = await User.findById(userId);
     const existsInCart = user.cart.some(
-      (data) => (data.item.toString() === itemId || data._id === itemId) && data.kind === kind);
+      (data) => (data.item.toString() === item || data._id === item) && data.kind === kind);
 
     if (!existsInCart) {
       return res.status(400).json({ message: "It's not in Cart" });
     }
 
     user.cart = user.cart.filter(
-      (data) => !(data.item.toString() === itemId && data.kind === kind)
+      (data) => !(data.item.toString() === item && data.kind === kind)
     );
 
     await user.save();

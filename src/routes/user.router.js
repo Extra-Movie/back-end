@@ -25,13 +25,13 @@ router.get("/getOwned", authMiddleware, getOwned);
 
 router.get("/getCart", authMiddleware, getCardsItems);
 router.post("/addToCart", authMiddleware, addToCart);
-router.delete("/removeCart", authMiddleware, removeFromCart);
+router.post("/removeCart", authMiddleware, removeFromCart);
 
 
 
 router.post("/watchlist", authMiddleware, addToWatchlist);
 router.get("/getWatchlist", authMiddleware, getWatchlist);
-router.delete("/removeWatchlist", authMiddleware, removeFromWatchlist);
+router.post("/removeWatchlist", authMiddleware, removeFromWatchlist);
 
 router.get("/", authMiddleware, adminMiddleware, getAllUsersData);
 router.get("/:id", authMiddleware, getUserDataById);
