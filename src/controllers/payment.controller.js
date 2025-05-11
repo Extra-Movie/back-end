@@ -7,13 +7,12 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const createPaymentIntent = async (req, res) => {
   console.log(" createPaymentIntent called by", req.userId);
   try {
-    const { cartMovies: cart } = await User.findById(req.userId)
+    const { cart: cart } = await User.findById(req.userId)
       .select({
-        cartMovies: 1,
+        cart: 1,
       })
       .populate({
-        path: "cartMovies",
-        select: "title price poster_path",
+        path: "cart.item",
       });
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
@@ -22,12 +21,12 @@ const createPaymentIntent = async (req, res) => {
       return res.status(400).json({ message: "Cart is empty" });
     }
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: cart.reduce((acc, movie) => acc + movie.price * 100, 0), // Convert to cents
+      amount: cart.reduce((acc, item) => item.item && acc + parseInt(item.item?.price) * 100, 0), // Convert to cents
       currency: "egp",
       automatic_payment_methods: { enabled: true },
       metadata: {
         userId: req.userId,
-        cartMovies: JSON.stringify(cart.map((movie) => movie._id)),
+        cartMovies: JSON.stringify(cart.map((movie) => movie.item && movie.item?._id)),
       },
     });
     res.status(200).json({ clientSecret: paymentIntent.client_secret });
