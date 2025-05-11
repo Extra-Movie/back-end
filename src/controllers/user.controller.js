@@ -132,6 +132,34 @@ const getWatchlist = async (req, res) => {
   }
 };
 
+const removeFromWatchlist = async (req, res) => {
+  const userId = req.userId;
+  const { item, kind } = req.body; 
+
+  if (!["movies", "tvShows"].includes(kind)) {
+    return res.status(400).json({ message: "Invalid kind try enter tvShows or movies" });
+  }
+  try {
+    const user = await User.findById(userId);
+    const existsInWatchList = user.watchlist.some(
+      (data) => (data.item.toString() === item || data._id === item) && data.kind === kind);
+
+    if (!existsInWatchList) {
+      return res.status(400).json({ message: "It's not in watchlist" });
+    }
+
+    user.watchlist = user.watchlist.filter(
+      (data) => !(data.item.toString() === item && data.kind === kind)
+    );
+
+    await user.save();
+
+    res.status(200).json({ message: "Removed from watchlist", watchlist: user.watchlist });
+  } catch (error) {
+    res.status(500).json({ message: "server error", error });
+  }
+}
+
 
 const getCardsItems = async (req, res) => {
   const userId = req.userId;
@@ -176,6 +204,35 @@ const addToCart = async (req, res) => {
     res.status(500).json({ message: "server error", error });
   }
 };
+
+removeFromCart = async (req, res) => {
+  const userId = req.userId;
+  const { item, kind } = req.body; 
+
+  if (!["movies", "tvShows"].includes(kind)) {
+    return res.status(400).json({ message: "Invalid kind try enter tvShows or movies" });
+  }
+  try {
+    const user = await User.findById(userId);
+    const existsInCart = user.cart.some(
+      (data) => (data.item.toString() === item || data._id === item) && data.kind === kind);
+
+    if (!existsInCart) {
+      return res.status(400).json({ message: "It's not in Cart" });
+    }
+
+    user.cart = user.cart.filter(
+      (data) => !(data.item.toString() === item && data.kind === kind)
+    );
+
+    await user.save();
+
+    res.status(200).json({ message: "Removed from Cart", cart: user.cart });
+  } catch (error) {
+    res.status(500).json({ message: "server error", error });
+  }
+  
+}
 
 const getOwned = async (req, res) => {
   const userId = req.userId;
@@ -234,6 +291,8 @@ module.exports = {
   getWatchlist,
   getCardsItems,
   addToCart,
+  removeFromCart,
+  removeFromWatchlist,
   getOwned,
   addToOwned
 };
