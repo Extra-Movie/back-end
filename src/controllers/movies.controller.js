@@ -24,7 +24,7 @@ const getMovies = async (req, res) => {
 
   if (req.query.popularity) {
     const pop = parseInt(req.query.popularity);
-    filter.popularity = { $gte: vote, $lt: pop + 1 };
+    filter.popularity = { $gte: pop, $lt: pop + 1 };
   }
 
   try {

@@ -8,6 +8,8 @@ const swaggerUI = require("swagger-ui-express");
 const app = express();
 
 app.use(morgan("dev"));
+// adding webhook for stripe here to prevent body parsing using express.json()
+app.use("/webhook/payment", require("./src/webhooks/payment.webhook"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cros({ origin: "*" }));
@@ -37,6 +39,7 @@ app.use("/api/users", require("./src/routes/user.router"));
 app.use("/api/movies", require("./src/routes/movies.router"));
 app.use("/api/tvshows", require("./src/routes/tv.router"));
 app.use("/api/genres", require("./src/routes/genres.router"));
+app.use("/api/payment", require("./src/routes/payment.router"));
 //#endregion endpoints
 
 // not found middleware
