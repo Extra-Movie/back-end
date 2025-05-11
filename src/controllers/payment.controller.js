@@ -5,7 +5,6 @@ const TVShow = require("../models/Tv");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const createPaymentIntent = async (req, res) => {
-  console.log(" createPaymentIntent called by", req.userId);
   try {
     const { cart: cart } = await User.findById(req.userId)
       .select({
@@ -42,7 +41,6 @@ const createPaymentIntent = async (req, res) => {
 };
 
 const paymentListener = async (req, res) => {
-  console.log("paymentListener called");
   let event;
   const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
 
@@ -79,9 +77,9 @@ const paymentListener = async (req, res) => {
 
 const handlePaymentIntentSucceeded = async (paymentIntent) => {
   // Handle the successful payment intent here
-  console.log("PaymentIntent succeeded:", paymentIntent);
   if (paymentIntent.status !== "succeeded") {
     console.log("PaymentIntent not succeeded:", paymentIntent);
+    throw new Error("PaymentIntent not succeeded");
     return;
   }
   // !? Get the userId from the metadata of the payment intent
@@ -93,9 +91,7 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
       console.error("User not found:", userId);
       return;
     }
-    console.log("User found:", userId, user);
-    // ! Needed to be changed after changing the schema of user model for the owned and cart (DONE)
-    user.owned.push(...user.cart); 
+    user.owned.push(...user.cart);
     const moviesID = [];
     const tvShowsID = [];
     user.cart.forEach((media) =>
@@ -112,12 +108,9 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
       { $inc: { number_of_purchases: 1 } }
     );
 
-    Transactions.create({
+    const newTransaction = new Transactions({
       userId: user._id,
-      // ! needed to be changed to check for the movies and series
-      purchased: {
-        movies: user.cart,
-      },
+      purchased: user.cart,
       // ?Convert back to original amount
       amount: paymentIntent.amount_received / 100,
       status: "completed",
@@ -128,9 +121,8 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
     // Clear the cart after successful payment
     user.cart = [];
     await user.save();
-    console.log("Cart cleared for user:", userId);
 
-    await Transactions.create;
+    await newTransaction.save();
   } catch (error) {
     console.error("Error clearing cart:", error);
   }

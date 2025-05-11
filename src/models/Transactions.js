@@ -1,19 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const contentSchema = new mongoose.Schema({
-  movies: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Movie",
-    },
-  ],
-  tvShows: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "TVShow",
-    },
-  ],
-});
+
 const transactionSchema = new Schema(
   {
     userId: {
@@ -21,10 +8,20 @@ const transactionSchema = new Schema(
       ref: "User",
       required: true,
     },
-    purchased: {
-      type: contentSchema,
-      required: true,
-    },
+    purchased: [
+      {
+        item: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          refPath: "purchased.kind",
+        },
+        kind: {
+          type: String,
+          required: true,
+          enum: ["movies", "tvShows"],
+        },
+      },
+    ],
     amount: {
       type: Number,
       required: true,
