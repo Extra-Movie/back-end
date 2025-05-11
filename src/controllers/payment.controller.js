@@ -44,7 +44,7 @@ const createPaymentIntent = async (req, res) => {
 const paymentListener = async (req, res) => {
   console.log("paymentListener called");
   let event;
-  const endpointSecret = process.env.STRIPE_TEST_ENDPOINT_SECRET.trim();
+  const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
 
   if (endpointSecret) {
     // Get the signature sent by Stripe
