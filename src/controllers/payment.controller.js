@@ -21,12 +21,17 @@ const createPaymentIntent = async (req, res) => {
       return res.status(400).json({ message: "Cart is empty" });
     }
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: cart.reduce((acc, item) => item.item && acc + parseInt(item.item?.price) * 100, 0), // Convert to cents
+      amount: cart.reduce(
+        (acc, item) => item.item && acc + parseInt(item.item?.price) * 100,
+        0
+      ), // Convert to cents
       currency: "egp",
       automatic_payment_methods: { enabled: true },
       metadata: {
         userId: req.userId,
-        cartMovies: JSON.stringify(cart.map((movie) => movie.item && movie.item?._id)),
+        cartMovies: JSON.stringify(
+          cart.map((movie) => movie.item && movie.item?._id)
+        ),
       },
     });
     res.status(200).json({ clientSecret: paymentIntent.client_secret });
@@ -39,7 +44,7 @@ const createPaymentIntent = async (req, res) => {
 const paymentListener = async (req, res) => {
   console.log("paymentListener called");
   let event;
-  const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET.trim();
+  const endpointSecret = process.env.STRIPE_TEST_ENDPOINT_SECRET.trim();
 
   if (endpointSecret) {
     // Get the signature sent by Stripe
@@ -88,16 +93,22 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
       console.error("User not found:", userId);
       return;
     }
-    // update the purchased movies in the user model
-    // ! Needed to be changed after changing the schema of user model for the owned and cart
-    user.ownedMovies.push(...user.cartMovies); // Assuming you have an ownedMovies field in the User model
-
+    console.log("User found:", userId, user);
+    // ! Needed to be changed after changing the schema of user model for the owned and cart (DONE)
+    user.owned.push(...user.cart); 
+    const moviesID = [];
+    const tvShowsID = [];
+    user.cart.forEach((media) =>
+      media.kind === "movies"
+        ? moviesID.push(media.item._id)
+        : tvShowsID.push(media.item._id)
+    );
     await Movie.updateMany(
-      { _id: { $in: user.cartMovies } },
+      { _id: { $in: moviesID } },
       { $inc: { number_of_purchases: 1 } }
     );
     await TVShow.updateMany(
-      { _id: { $in: user.cartMovies } },
+      { _id: { $in: tvShowsID } },
       { $inc: { number_of_purchases: 1 } }
     );
 
@@ -105,7 +116,7 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
       userId: user._id,
       // ! needed to be changed to check for the movies and series
       purchased: {
-        movies: user.cartMovies,
+        movies: user.cart,
       },
       // ?Convert back to original amount
       amount: paymentIntent.amount_received / 100,
@@ -115,7 +126,7 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
     });
 
     // Clear the cart after successful payment
-    user.cartMovies = [];
+    user.cart = [];
     await user.save();
     console.log("Cart cleared for user:", userId);
 
