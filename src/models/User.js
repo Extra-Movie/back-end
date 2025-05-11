@@ -24,43 +24,46 @@ const UserSchema = new mongoose.Schema(
       match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
     },
     isAdmin: { type: Boolean, required: true, default: false },
-    favoriteMovies: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "movies",
-      default: [],
-    },
+
     owned: [
       {
-        item: { type: mongoose.Schema.Types.ObjectId, refPath: 'owned.kind' },
-        kind: { type: String, enum: ['movies', 'tvShows'], required: true },
-      }
+        item: { type: mongoose.Schema.Types.ObjectId, refPath: "owned.kind" },
+        kind: { type: String, enum: ["movies", "tvShows"], required: true },
+      },
     ],
 
-    watchlist:[{
-       item:{
-        type: mongoose.Schema.Types.ObjectId,
-        required:true,
-        refPath:"watchlist.kind"
+    watchlist: [
+      {
+        item: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          refPath: "watchlist.kind",
         },
-      kind:{
-        type:String,
-        required:true,
-        enum:["movies","tvShows"]
-      }
-  }],
-  cart:[{
-    item:{
-     type: mongoose.Schema.Types.ObjectId,
-     required:true,
-     refPath:"cart.kind"
-     },
-   kind:{
-     type:String,
-     required:true,
-     enum:["movies","tvShows"]
-   }
-}],
+        kind: {
+          type: String,
+          required: true,
+          enum: ["movies", "tvShows"],
+        },
+      },
+    ],
+
+
+    cart: [
+      {
+        item: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          refPath: "cart.kind",
+        },
+        kind: {
+          type: String,
+          required: true,
+          enum: ["movies", "tvShows"],
+        },
+      },
+    ],
   },
+  
   {
     timestamps: true,
   }

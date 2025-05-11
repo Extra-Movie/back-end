@@ -205,7 +205,7 @@ const addToCart = async (req, res) => {
   }
 };
 
-removeFromCart = async (req, res) => {
+const removeFromCart = async (req, res) => {
   const userId = req.userId;
   const { item, kind } = req.body; 
 
