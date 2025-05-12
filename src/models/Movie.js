@@ -13,9 +13,6 @@ const movieSchema = new mongoose.Schema(
       type: [Number],
       default: [],
     },
-    id: {
-      type: Number,
-    },
     original_language: {
       type: String,
     },
@@ -55,6 +52,10 @@ const movieSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    visited: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     strict: "throw",
@@ -68,5 +69,7 @@ movieSchema.index({ release_date: 1 });
 movieSchema.index({ vote_average: 1 });
 movieSchema.index({ vote_count: 1 });
 movieSchema.index({ popularity: 1 });
+movieSchema.index({ number_of_purchases: 1 });
+movieSchema.index({ visited: 1 });
 
 module.exports = mongoose.model("movies", movieSchema);

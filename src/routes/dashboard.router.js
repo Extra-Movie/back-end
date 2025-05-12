@@ -8,6 +8,10 @@ const {
   totalRevenue,
   monthlySalesTrend,
   topSellingContent,
+  mostVisitedContent,
+  topRatedContent,
+  contentbyGenre,
+  contentAddedMonthly,
 } = require("../controllers/dashboard.controller");
 
 //#region User Dashboard
@@ -21,5 +25,12 @@ router.get("/total-sales", totalSales);
 router.get("/total-revenue", totalRevenue);
 router.get("/monthly-sales-trend", monthlySalesTrend);
 router.get("/top-selling-content", topSellingContent);
+// #endregion
+
+//#region Movie & TV Show Dashboard
+router.get("/most-visited-content", mostVisitedContent);
+router.get("/top-rated-content", topRatedContent);
+router.get("/content-by-genre", contentbyGenre);
+router.get("/content-added-monthly", contentAddedMonthly);
 // #endregion
 module.exports = router;

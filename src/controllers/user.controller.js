@@ -10,8 +10,8 @@ const getAllUsersData = async (req, res) => {
   res.status(200).json({ usersData: allUsersData });
 };
 
-const getUserDataById = async (req, res) => {
-  const { id } = req.params;
+const getUserData = async (req, res) => {
+  const id = req.userId;
   const userData = await User.findById(id).select(
     "-password -__v -createdAt -updatedAt"
   );
@@ -283,7 +283,7 @@ const addToOwned = async (req, res) => {
 
 module.exports = {
   getAllUsersData,
-  getUserDataById,
+  getUserData,
   updateProfile,
   deleteUser,
   makeAdmin,
@@ -294,5 +294,5 @@ module.exports = {
   removeFromCart,
   removeFromWatchlist,
   getOwned,
-  addToOwned
+  addToOwned,
 };

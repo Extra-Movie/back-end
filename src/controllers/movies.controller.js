@@ -68,11 +68,17 @@ const getTopMovies = async (req, res) => {
 
 const getMovieById = async (req, res) => {
   const { id } = req.params;
-  const movie = await Movie.findById(id);
-  if (!movie) {
-    return res.status(404).json({ message: "Movie not found" });
+  try {
+    const movie = await Movie.findById(id);
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+    movie.visited = movie.visited + 1; 
+    await movie.save();
+    return res.status(200).json({ movie });
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching movie", error });
   }
-  return res.status(200).json({ movie });
 };
 
 const addMovie = async (req, res) => {

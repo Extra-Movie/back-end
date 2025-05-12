@@ -2,6 +2,8 @@ const User = require("../models/User");
 const Transaction = require("../models/Transactions");
 const Movie = require("../models/Movie");
 const TVShow = require("../models/Tv");
+const MGenre = require("../models/MovieGenre");
+const TGenre = require("../models/TvShowGenre");
 
 //#region User Dashboard
 const totalUsers = async (req, res) => {
@@ -236,6 +238,58 @@ const topSellingContent = async (req, res) => {
 };
 // #endregion
 
+//#region Movie & TV Show Dashboard
+const mostVisitedContent = async (req, res) => {
+  try {
+    const movies = await Movie.find()
+      .sort({ visited: -1 })
+      .limit(5)
+      .select("title visited poster_path");
+
+    const tvShows = await TVShow.find()
+      .sort({ visited: -1 })
+      .limit(5)
+      .select("name visited poster_path");
+
+    if (movies.length === 0 && tvShows.length === 0) {
+      return res.status(404).json({ message: "No content found" });
+    }
+    res.json({
+      movies: movies,
+      tvShows: tvShows,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+const topRatedContent = async (req, res) => {
+  try {
+    const movies = await Movie.find()
+      .sort({ vote_average: -1 })
+      .limit(5)
+      .select("title vote_average poster_path");
+
+    const tvShows = await TVShow.find()
+      .sort({ vote_average: -1 })
+      .limit(5)
+      .select("name vote_average poster_path");
+
+    if (movies.length === 0 && tvShows.length === 0) {
+      return res.status(404).json({ message: "No content found" });
+    }
+    res.json({
+      movies: movies,
+      tvShows: tvShows,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+const contentbyGenre = async (req, res) => {
+  const movies = await Movie.find();
+};
+const contentAddedMonthly = async (req, res) => {};
+// #endregion
 
 module.exports = {
   usersByRole,
@@ -245,4 +299,8 @@ module.exports = {
   totalRevenue,
   monthlySalesTrend,
   topSellingContent,
+  mostVisitedContent,
+  topRatedContent,
+  contentbyGenre,
+  contentAddedMonthly,
 };

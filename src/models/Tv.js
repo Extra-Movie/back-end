@@ -13,9 +13,6 @@ const tvSchema = new mongoose.Schema(
       type: [Number],
       default: [],
     },
-    id: {
-      type: Number,
-    },
     origin_country: {
       type: [String],
       default: [],
@@ -55,6 +52,10 @@ const tvSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    visited: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     strict: "throw",
@@ -68,6 +69,8 @@ tvSchema.index({ release_date: 1 });
 tvSchema.index({ vote_average: 1 });
 tvSchema.index({ vote_count: 1 });
 tvSchema.index({ popularity: 1 });
+tvSchema.index({ number_of_purchases: 1 });
+tvSchema.index({ visited: 1 });
 
 // module.exports = mongoose.model("tvshows", tvSchema);
 

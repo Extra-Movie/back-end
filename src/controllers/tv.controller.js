@@ -57,11 +57,17 @@ const getTopTvShows = async (req, res) => {
 
 const getTvShowById = async (req, res) => {
   const { id } = req.params;
-  const tvShow = await Tv.findById(id);
-  if (!tvShow) {
-    return res.status(404).json({ message: "Tv show not found" });
+  try {
+    const tvShow = await Tv.findById(id);
+    if (!tvShow) {
+      return res.status(404).json({ message: "Tv show not found" });
+    }
+    tvShow.visited = tvShow.visited + 1;
+    await tvShow.save();
+    return res.status(200).json({ tvShow });
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching movie", error });
   }
-  return res.status(200).json({ tvShow });
 };
 
 const addTvShow = async (req, res) => {

@@ -43,4 +43,11 @@ const transactionSchema = new Schema(
   },
   { timestamps: true }
 );
+
+
+
+transactionSchema.index({ createdAt: 1 }); 
+transactionSchema.index({ amount: 1 });
+transactionSchema.index({ status: 1 });
+
 module.exports = mongoose.model("Transaction", transactionSchema);
