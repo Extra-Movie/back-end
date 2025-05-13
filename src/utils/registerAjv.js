@@ -1,8 +1,8 @@
 const Ajv = require("ajv");
-const addFormats = require("ajv-formats"); 
+const addFormats = require("ajv-formats");
 
 const ajv = new Ajv();
-addFormats(ajv); 
+addFormats(ajv);
 
 module.exports = ajv.compile({
   type: "object",
@@ -13,11 +13,11 @@ module.exports = ajv.compile({
       maxLength: 30,
       pattern: "^[a-zA-Z0-9 ]+$",
     },
-    email: { type: "string", format: "email" }, 
+    email: { type: "string", format: "email" },
     password: {
       type: "string",
       minLength: 8,
-      pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,}$", 
+      pattern: "^[a-zA-Z][a-zA-Z0-9_.]{3,}@[a-zA-Z]{3,}.[a-zA-Z]{3,}$",
     },
   },
   required: ["name", "email", "password"],
