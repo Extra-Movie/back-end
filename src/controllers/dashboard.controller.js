@@ -286,10 +286,129 @@ const topRatedContent = async (req, res) => {
   }
 };
 const contentbyGenre = async (req, res) => {
-  const movies = await Movie.find();
+  try {
+    const movies = await Movie.aggregate([
+      {
+        $unwind: "$genre_ids",
+      },
+      {
+        $group: {
+          _id: "$genre_ids",
+          movieCount: { $sum: 1 },
+        },
+      },
+      {
+        $lookup: {
+          from: "moviegenres",
+          localField: "_id",
+          foreignField: "id",
+          as: "genreDetails",
+        },
+      },
+      {
+        $unwind: "$genreDetails",
+      },
+      {
+        $project: {
+          _id: 0,
+          genre_id: "$_id",
+          genre_name: "$genreDetails.name",
+          movieCount: 1,
+        },
+      },
+      {
+        $sort: { movieCount: -1 },
+      },
+    ]);
+    const tvshows = await Movie.aggregate([
+      {
+        $unwind: "$genre_ids",
+      },
+      {
+        $group: {
+          _id: "$genre_ids",
+          tvshowCount: { $sum: 1 },
+        },
+      },
+      {
+        $lookup: {
+          from: "tvshowgenres",
+          localField: "_id",
+          foreignField: "id",
+          as: "genreDetails",
+        },
+      },
+      {
+        $unwind: "$genreDetails",
+      },
+      {
+        $project: {
+          _id: 0,
+          genre_id: "$_id",
+          genre_name: "$genreDetails.name",
+          movieCount: 1,
+        },
+      },
+      {
+        $sort: { movieCount: -1 },
+      },
+    ]);
+    if (movies.length === 0 && tvshows.length === 0) {
+      return res.status(404).json({ message: "No content found" });
+    }
+    res.json({
+      movies: movies,
+      tvshows: tvshows,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
-const contentAddedMonthly = async (req, res) => {};
-// #endregion
+//#endregion
+
+//#region  Cart & Watchlist Dashboard
+const cartFrequency = async (req, res) => {
+  try {
+    const user = await User.findOne({ "cart.0": { $exists: true } }).select(
+      "cart name email"
+    );
+    if (!user) {
+      return res.status(404).json({ message: "No users found" });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const watchlistTrends = async (req, res) => {
+  try {
+    const users = await User.aggregate([
+      {
+        $unwind: "$watchlist",
+      },
+      {
+        $group: {
+          _id: "$watchlist.item",
+          totalCount: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+const abandonedCarts = async (req, res) => {
+  try {
+    const users = await User;
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+//#endregion
 
 module.exports = {
   usersByRole,
@@ -302,5 +421,7 @@ module.exports = {
   mostVisitedContent,
   topRatedContent,
   contentbyGenre,
-  contentAddedMonthly,
+  cartFrequency,
+  watchlistTrends,
+  abandonedCarts,
 };

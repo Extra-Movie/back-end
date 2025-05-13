@@ -11,7 +11,9 @@ const {
   mostVisitedContent,
   topRatedContent,
   contentbyGenre,
-  contentAddedMonthly,
+  cartFrequency,
+  watchlistTrends,
+  abandonedCarts,
 } = require("../controllers/dashboard.controller");
 
 //#region User Dashboard
@@ -31,6 +33,11 @@ router.get("/top-selling-content", topSellingContent);
 router.get("/most-visited-content", mostVisitedContent);
 router.get("/top-rated-content", topRatedContent);
 router.get("/content-by-genre", contentbyGenre);
-router.get("/content-added-monthly", contentAddedMonthly);
 // #endregion
+
+//#region Cart & Watchlist Dashboard
+router.get("/cart-frequency", cartFrequency);
+router.get("/watchlist-trends", watchlistTrends);
+router.get("/abandoned-carts", abandonedCarts);
+//#endregion
 module.exports = router;
