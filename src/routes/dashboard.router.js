@@ -38,6 +38,6 @@ router.get("/content-by-genre", contentbyGenre);
 //#region Cart & Watchlist Dashboard
 router.get("/cart-frequency", cartFrequency);
 router.get("/watchlist-trends", watchlistTrends);
-router.get("/abandoned-carts", abandonedCarts);
 //#endregion
+
 module.exports = router;

@@ -401,13 +401,6 @@ const watchlistTrends = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-const abandonedCarts = async (req, res) => {
-  try {
-    const users = await User;
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
 //#endregion
 
 module.exports = {
@@ -423,5 +416,4 @@ module.exports = {
   contentbyGenre,
   cartFrequency,
   watchlistTrends,
-  abandonedCarts,
 };
