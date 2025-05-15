@@ -376,13 +376,9 @@ const cartFrequency = async (req, res) => {
       return res.status(404).json({ message: "No users found" });
     }
     const totalUsers = users.length;
-    const usersWithCartSize = users.map((user) => ({
-      name: user.name,
-      email: user.email,
-      cartSize: user.cart.length,
-    }));
+    
 
-    return res.json({ totalUsers, users: usersWithCartSize });
+    return res.json({ totalUsers });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
