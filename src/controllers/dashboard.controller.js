@@ -369,7 +369,7 @@ const contentbyGenre = async (req, res) => {
 //#region  Cart & Watchlist Dashboard
 const cartFrequency = async (req, res) => {
   try {
-    const user = await User.findOne({ "cart.0": { $exists: true } }).select(
+    const user = await User.find({ "cart.0": { $exists: true } }).select(
       "cart name email"
     );
     if (!user) {
