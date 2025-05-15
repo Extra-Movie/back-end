@@ -369,13 +369,20 @@ const contentbyGenre = async (req, res) => {
 //#region  Cart & Watchlist Dashboard
 const cartFrequency = async (req, res) => {
   try {
-    const user = await User.find({ "cart.0": { $exists: true } }).select(
+    const users = await User.find({ "cart.0": { $exists: true } }).select(
       "cart name email"
     );
-    if (!user) {
+    if (!users || users.length === 0) {
       return res.status(404).json({ message: "No users found" });
     }
-    res.json(user);
+    const totalUsers = users.length;
+    const usersWithCartSize = users.map((user) => ({
+      name: user.name,
+      email: user.email,
+      cartSize: user.cart.length,
+    }));
+
+    return res.json({ totalUsers, users: usersWithCartSize });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
