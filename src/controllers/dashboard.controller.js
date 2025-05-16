@@ -217,7 +217,7 @@ const topSellingContent = async (req, res) => {
     const movies = await Movie.find()
 
       .sort({ number_of_purchases: -1 })
-      .limit(10)
+      .limit(5)
       .select("title number_of_purchases");
 
     const tvShows = await TVShow.find()
