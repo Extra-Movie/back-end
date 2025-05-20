@@ -391,6 +391,454 @@
  *         description: Forbidden
  */
 
+/**
+ * @swagger
+ * /api/dashboard/total-users:
+ *   get:
+ *     summary: Get total number of registered users
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Total user count
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalUsers:
+ *                   type: integer
+ *       404:
+ *         description: No users found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/total-revenue:
+ *   get:
+ *     summary: Get total revenue from completed transactions
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *         description: Filter revenue by year
+ *     responses:
+ *       200:
+ *         description: Total revenue
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalRevenue:
+ *                   type: number
+ *       404:
+ *         description: No revenue found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/user-growth:
+ *   get:
+ *     summary: Get monthly user registration growth
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *         description: Year to fetch growth data for
+ *     responses:
+ *       200:
+ *         description: Monthly user growth
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   month:
+ *                     type: string
+ *                   totalCount:
+ *                     type: integer
+ *       404:
+ *         description: No users found
+ */
+
+/**
+ * @swagger
+ * /api/payment/create-payment-intent:
+ *   post:
+ *     summary: Create Stripe payment intent for user's cart
+ *     tags: [Payment]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Payment intent created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 clientSecret:
+ *                   type: string
+ *       400:
+ *         description: Cart is empty
+ *       404:
+ *         description: Cart not found
+ *       500:
+ *         description: Failed to create payment intent
+ */
+
+/**
+ * @swagger
+ * /api/users/getCart:
+ *   get:
+ *     summary: Get user's current cart items
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of cart items
+ *       404:
+ *         description: User not found
+ */
+
+/**
+ * @swagger
+ * /api/users/getWatchlist:
+ *   get:
+ *     summary: Get user's watchlist
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Watchlist items
+ *       404:
+ *         description: User not found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/total-users:
+ *   get:
+ *     summary: Get total number of registered users
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Total user count
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalUsers:
+ *                   type: integer
+ *       404:
+ *         description: No users found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/users-by-role:
+ *   get:
+ *     summary: Get number of users grouped by role
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Grouped user role count
+ *       404:
+ *         description: No users found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/total-sales:
+ *   get:
+ *     summary: Get total number of completed sales
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Total sales count
+ *       404:
+ *         description: No sales found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/monthly-sales-trend:
+ *   get:
+ *     summary: Get monthly sales trend by year
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *         description: Filter sales trend by year
+ *     responses:
+ *       200:
+ *         description: Monthly sales trend
+ *       404:
+ *         description: No sales found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/top-selling-content:
+ *   get:
+ *     summary: Get top 5 selling movies and TV shows
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Top selling content data
+ *       404:
+ *         description: No content found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/most-visited-content:
+ *   get:
+ *     summary: Get most visited content
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Most visited movies and TV shows
+ *       404:
+ *         description: No content found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/top-rated-content:
+ *   get:
+ *     summary: Get top rated content
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Top rated movies and TV shows
+ *       404:
+ *         description: No content found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/content-by-genre:
+ *   get:
+ *     summary: Get movie and TV show count by genre
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Genre content statistics
+ *       404:
+ *         description: No content found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/cart-frequency:
+ *   get:
+ *     summary: Get how many users have non-empty carts
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Count of users with active carts
+ *       404:
+ *         description: No users found
+ */
+
+/**
+ * @swagger
+ * /api/dashboard/watchlist-trends:
+ *   get:
+ *     summary: Get watchlist usage trends
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Watchlist aggregation by item
+ */
+
+/**
+ * @swagger
+ * /api/users/addToCart:
+ *   post:
+ *     summary: Add an item to user's cart
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               item:
+ *                 type: string
+ *               kind:
+ *                 type: string
+ *                 enum: [movies, tvShows]
+ *     responses:
+ *       200:
+ *         description: Item added to cart
+ *       400:
+ *         description: Already in cart
+ */
+
+/**
+ * @swagger
+ * /api/users/removeCart:
+ *   post:
+ *     summary: Remove item from user's cart
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               item:
+ *                 type: string
+ *               kind:
+ *                 type: string
+ *                 enum: [movies, tvShows]
+ *     responses:
+ *       200:
+ *         description: Item removed from cart
+ *       400:
+ *         description: Item not found in cart
+ */
+
+/**
+ * @swagger
+ * /api/users/watchlist:
+ *   post:
+ *     summary: Add an item to user's watchlist
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               item:
+ *                 type: string
+ *               kind:
+ *                 type: string
+ *                 enum: [movies, tvShows]
+ *     responses:
+ *       200:
+ *         description: Item added to watchlist
+ *       400:
+ *         description: Already in watchlist
+ */
+
+/**
+ * @swagger
+ * /api/users/removeWatchlist:
+ *   post:
+ *     summary: Remove an item from user's watchlist
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               item:
+ *                 type: string
+ *               kind:
+ *                 type: string
+ *                 enum: [movies, tvShows]
+ *     responses:
+ *       200:
+ *         description: Item removed from watchlist
+ *       400:
+ *         description: Item not found in watchlist
+ */
+
+/**
+ * @swagger
+ * /api/users/getOwned:
+ *   get:
+ *     summary: Get all content owned by user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Owned content list
+ *       404:
+ *         description: User not found
+ */
+
+/**
+ * @swagger
+ * /api/users/addOwned:
+ *   post:
+ *     summary: Add owned content to user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               item:
+ *                 type: string
+ *               kind:
+ *                 type: string
+ *                 enum: [movies, tvShows]
+ *     responses:
+ *       200:
+ *         description: Added to owned list
+ *       400:
+ *         description: Already in owned list
+ */
 
 // (all routes from previous content preserved — omitted here for brevity)
 
