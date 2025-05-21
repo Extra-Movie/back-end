@@ -73,7 +73,7 @@ const getMovieById = async (req, res) => {
     if (!movie) {
       return res.status(404).json({ message: "Movie not found" });
     }
-    movie.visited = movie.visited + 1; 
+    movie.visited = movie.visited + 1;
     await movie.save();
     return res.status(200).json({ movie });
   } catch (error) {
@@ -89,9 +89,10 @@ const addMovie = async (req, res) => {
   const data = {
     ...req.body,
     poster_path:
-      process.env.Host + "/uploads/" + req.files.poster_path[0].filename,
-    backdrop_path:
-      process.env.Host + "/uploads/" + req.files.backdrop_path[0].filename,
+      // process.env.Host + "/uploads/" + req.files.poster_path[0].filename,
+      null,
+    backdrop_path: null,
+    // process.env.Host + "/uploads/" + req.files.backdrop_path[0].filename,
   };
   const movie = new Movie(data);
   try {
