@@ -12,7 +12,14 @@ app.use(morgan("dev"));
 app.use("/webhook/payment", require("./src/webhooks/payment.webhook"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cros({ origin: "*" }));
+app.use(cors({ origin: "*" }));
+// // Set public-access headers
+// app.use((req, res, next) => {
+//   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'); // Let any site embed your resource
+//   res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp'); // Optional - needed for SharedArrayBuffer
+//   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');    // Optional - for cross-origin isolation
+//   next();
+// });
 app.use(helmet());
 app.use(
   "/uploads",
