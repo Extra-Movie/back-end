@@ -1,5 +1,5 @@
 const express = require("express");
-const cros = require("cors");
+const cors = require("cors");
 const helmet = require("helmet");
 const dotenv = require("dotenv").config();
 const path = require("path");
